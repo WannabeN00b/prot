@@ -17,15 +17,18 @@
     localStorage.setItem('mahede-theme', body.classList.contains('dark') ? 'dark' : 'light');
   });
 
-  function closeMenu(){
-    menuPanel.classList.remove('open'); menuPanel.setAttribute('aria-hidden','true'); menuButton.setAttribute('aria-expanded','false');
-  }
-  menuButton.addEventListener('click', () => {
-    const open = menuPanel.classList.toggle('open');
+  function setMenu(open){
+    if(!menuPanel || !menuButton) return;
+    menuPanel.classList.toggle('open', open);
     menuPanel.setAttribute('aria-hidden', String(!open));
     menuButton.setAttribute('aria-expanded', String(open));
+    body.classList.toggle('menu-open', open);
+  }
+  function closeMenu(){ setMenu(false); }
+  menuButton.addEventListener('click', () => {
+    setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
   });
-  document.querySelectorAll('.menu-links a').forEach(a => a.addEventListener('click', closeMenu));
+  document.querySelectorAll('.menu-links a[href^="#"]').forEach(a => a.addEventListener('click', closeMenu));
 
   const filterButtons = document.querySelectorAll('.filter');
   const projects = document.querySelectorAll('.project');
